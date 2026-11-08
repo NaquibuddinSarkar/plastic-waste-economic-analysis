@@ -1,0 +1,14 @@
+{
+  "feedstock_tonnes_per_year": 2500,
+  "recovery_yield": 0.75,
+  "product_price_per_tonne": 550,
+  "gate_fee_per_tonne": 25,
+  "variable_opex_per_tonne": 180,
+  "fixed_opex_per_year": 100000,
+  "capex": 800000,
+  "project_years": 10,
+  "discount_rate": 0.12,
+  "annual_capacity_utilisation": 0.8,
+  "tax_rate": 0.25,
+  "annual_maintenance_capex": 12000
+}

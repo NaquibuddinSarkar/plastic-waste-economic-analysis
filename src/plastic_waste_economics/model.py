@@ -241,26 +241,42 @@ def simple_payback_years(cash_flows):
     return float("nan")
 
 
-def break_even_gate_fee_per_tonne(cfg):
-    """Estimate constant gate fee per incoming tonne that gives NPV = 0.
+def break_even_gate_fee_per_tonne(cfg, max_search_fee=1_000_000.0):
+    """Find the minimum non-negative gate fee per incoming tonne for NPV >= 0.
 
-    The fee is assumed to apply to actual annual incoming tonnes and to be
-    collected in every operating year. This simple calculation excludes
-    financing, tax interactions, collection losses and contractual constraints.
+    Uses the full project cash-flow function, so tax and ramp-up effects are
+    included in the calculation. A gate fee is assumed to apply to actual
+    incoming tonnes in every operating year. The result is a mathematical
+    break-even value under the input assumptions, not evidence that a
+    customer, municipality or supplier will pay that fee.
+
+    If NPV is already non-negative with a zero gate fee, returns 0. If NPV
+    remains negative at max_search_fee, raises ValueError rather than
+    returning an unbracketed or misleading estimate.
     """
+    if not np.isfinite(max_search_fee) or max_search_fee <= 0:
+        raise ValueError("max_search_fee must be a positive finite number")
     base = dict(cfg)
     base["gate_fee_per_tonne"] = 0.0
-    result = project_cash_flows(**base)
-    base_npv = npv(result["cash_flows"], result["discount_rate"])
-    annual_tonnes = result["actual_feedstock_tonnes_per_year"]
-    years = result["project_years"]
-    rate = result["discount_rate"]
-    if annual_tonnes <= 0:
-        raise ValueError("actual annual feedstock must be positive to calculate break-even gate fee")
-    discounted_tonnes = sum(
-        annual_tonnes / ((1.0 + rate) ** year)
-        for year in range(1, years + 1)
+    base_npv = npv(
+        project_cash_flows(**base)["cash_flows"],
+        base["discount_rate"],
     )
-    if discounted_tonnes <= 0:
-        raise ValueError("discounted throughput must be positive")
-    return float(-base_npv / discounted_tonnes)
+    if base_npv >= 0:
+        return 0.0
+
+    def npv_at_gate_fee(fee):
+        case = dict(cfg)
+        case["gate_fee_per_tonne"] = float(fee)
+        result = project_cash_flows(**case)
+        return npv(result["cash_flows"], case["discount_rate"])
+
+    upper = 1.0
+    while upper < max_search_fee and npv_at_gate_fee(upper) < 0:
+        upper = min(upper * 2.0, max_search_fee)
+    upper_npv = npv_at_gate_fee(upper)
+    if upper_npv < 0:
+        raise ValueError(
+            "NPV remains negative at max_search_fee; inspect the base case or increase the search cap."
+        )
+    return float(brentq(npv_at_gate_fee, 0.0, upper))

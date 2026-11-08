@@ -1,16 +1,18 @@
 # Plastic Waste Economic Analysis
 
-A financial and material-flow model for evaluating a hypothetical plastic-waste processing or recycling project. The complete project source package is provided in [source-code.zip](./source-code.zip).
+A simplified material-flow and project-finance model for evaluating a hypothetical plastic-waste recycling or processing facility.
 
-## What is included
+## Project contents
 
-The source archive contains a Python cash-flow model, sensitivity analysis, configurable assumptions, a Jupyter walkthrough, CLI scripts, feasibility-gate checklist, data-source register and unit tests.
-
-The model calculates feedstock and product mass balance, revenue, operating costs, capital costs, NPV, IRR, payback and break-even conditions.
+- `src/plastic_waste_economics/model.py`: mass balance, annual cash flows, NPV, IRR and simple payback.
+- `scripts/run_financial_model.py`: runs the illustrative base case.
+- `scripts/run_sensitivity.py`: checks one-factor sensitivity to recovery yield.
+- `config/base_case.json`: editable operational and financial assumptions.
+- `notebooks/01_plastic_waste_financial_model.ipynb`: interactive model walkthrough.
+- `docs/`: model assumptions, data sources and feasibility-gate checklist.
+- `tests/`: manual tests for mass balance and financial calculations.
 
 ## Quick start
-
-Download and extract [source-code.zip](./source-code.zip), then run from the extracted project directory:
 
 ```bash
 python -m venv .venv
@@ -23,10 +25,16 @@ python scripts/run_financial_model.py
 python scripts/run_sensitivity.py
 ```
 
+## Model boundaries
+
+The model is a simplified unlevered cash-flow case. It does not fully model working capital, debt financing, inflation/escalation, polymer-specific contamination, detailed utilities, downtime, product quality premiums, permitting, environmental liability or terminal value. Extend these items before using the model for a feasibility decision.
+
 ## Data and investment assumptions
 
-The bundled base case uses illustrative assumptions, not verified Bangladesh market quotations, actual plant performance or an investment recommendation. Replace feedstock prices, process yields, capex, opex, product prices, utilities, logistics, financing and regulatory requirements with sourced, dated inputs. Test downside scenarios before making feasibility claims.
+The included assumptions are illustrative, not verified Bangladesh market quotations, measured plant performance or an investment recommendation. Replace feedstock prices, process yields, capex, opex, product prices, utility rates, logistics and regulatory costs with sourced and dated values. Secure feedstock and offtake evidence and complete the feasibility checklist before making investment claims.
 
-**No GitHub Actions or CI workflow is included, as requested.** Local tests are retained for manual verification.
+No GitHub Actions or CI workflow is configured. Tests are available for manual local execution.
 
-[Download complete source package](./source-code.zip)
+## Licence
+
+MIT. See [LICENSE](LICENSE).

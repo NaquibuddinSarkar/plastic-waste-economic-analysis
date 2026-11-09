@@ -113,10 +113,22 @@ def project_cash_flows(
     replacement_costs = replacement_costs or {}
     if not isinstance(replacement_costs, dict):
         raise TypeError("replacement_costs must be a {year: cost} mapping")
+    normalized_replacements = {}
     for year, value in replacement_costs.items():
-        if not isinstance(year, (int, np.integer)) or year < 1 or year > project_years:
+        try:
+            year_int = int(year)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("replacement-cost keys must be integer years") from exc
+        if str(year_int) != str(year) and not isinstance(year, (int, np.integer)):
+            raise ValueError("replacement-cost keys must be canonical integer years")
+        if year_int < 1 or year_int > project_years:
             raise ValueError("replacement-cost years must fall within project life")
-        _finite_nonnegative(f"replacement_costs[{year}]", value)
+        if year_int in normalized_replacements:
+            raise ValueError("replacement-cost years must be unique")
+        normalized_replacements[year_int] = _finite_nonnegative(
+            f"replacement_costs[{year_int}]", value
+        )
+    replacement_costs = normalized_replacements
 
     nominal_feed = float(feedstock_tonnes_per_year)
     actual_feed = nominal_feed * float(annual_capacity_utilisation)

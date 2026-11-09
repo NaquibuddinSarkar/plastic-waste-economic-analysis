@@ -6,7 +6,7 @@ A configurable screening-level model for evaluating the material flows and finan
 
 ## Start here
 
-Read [the beginner guide](docs/BEGINNER_GUIDE.md) before changing the financial assumptions.
+Read [the beginner guide](docs/BEGINNER_GUIDE.md) and [data dictionary](docs/DATA_DICTIONARY.md) before changing the financial assumptions.
 
 ### Quick start
 
@@ -32,7 +32,7 @@ A closed arithmetic balance is necessary but not sufficient. The assumed product
 
 ### 2. Revenue model
 
-The base configuration includes example product streams such as oil, char and gas-equivalent output. These are user-editable scenario variables, not typical or guaranteed process yields. Revenue is calculated from saleable mass multiplied by a user-entered selling price, plus an optional gate fee.
+The current model uses one aggregate saleable-product stream. It does not simulate separate oil, char, gas or polymer-specific process yields. Revenue is calculated from saleable mass multiplied by a user-entered selling price, plus a gate fee for accepting incoming waste. A technology-specific material balance must be built before modelling a particular recycling or conversion route.
 
 ### 3. Operating costs
 
@@ -40,7 +40,7 @@ The model includes configurable feedstock purchase cost, transport, utilities, v
 
 ### 4. Project cash flow
 
-The model calculates year-zero capex and annual operating cash flows across the project life. It reports:
+The model calculates year-zero CAPEX and annual operating cash flows across the project life, with optional ramp-up, replacement costs, maintenance CAPEX and salvage value. It reports:
 - **NPV:** present value of future cash flows less initial investment.
 - **IRR:** discount rate at which the modelled NPV equals zero, where a meaningful solution exists.
 - **Simple payback:** time until cumulative undiscounted cash flow turns positive.
@@ -67,7 +67,7 @@ These are policy and sector-context sources, not plant-specific supply contracts
 6. **Environmental and safety review:** assess emissions, wastewater, residues, fire/explosion hazards, worker exposure and permitting requirements.
 7. **Financial stress test:** test downside cases for uptime, yield, price, feedstock quality, transport, energy cost, FX, inflation and capex overruns.
 
-See [the feasibility gate checklist](docs/FEASIBILITY_GATE_CHECKLIST.md).
+See [the feasibility gate checklist](docs/FEASIBILITY_GATE_CHECKLIST.md) and [data-source register](docs/DATA_SOURCES.md).
 
 ## Repository structure
 

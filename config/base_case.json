@@ -10,5 +10,11 @@
   "discount_rate": 0.12,
   "annual_capacity_utilisation": 0.8,
   "tax_rate": 0.25,
-  "annual_maintenance_capex": 12000
+  "annual_maintenance_capex": 12000,
+  "saleable_fraction": 0.9,
+  "ramp_up_years": 2,
+  "replacement_costs": {
+    "5": 50000
+  },
+  "salvage_value": 25000
 }
